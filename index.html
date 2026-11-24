@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>記念式キャンペーン 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* 夜明け前の空：濃い藍の帯に金の数字、本文は白い紙の上に細い線で区切る。カードの箱を減らして線と余白で整理 */
+  :root{
+    color-scheme:light;
+    --night:#1e3b63; --night-2:#2b4c7a; --gold:#e3b04b; --gold-soft:#f7ecd2;
+    --paper:#fbfaf7; --ink:#1b2133; --sub:#5f6679; --rule:#e4e1d8; --dawn:#c75d3a; --dawn-soft:#f9e6dd;
+    --on-night:#f4f1e8;
+    --display:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",sans-serif;
+    --body:"Hiragino Sans","Noto Sans JP","Yu Gothic",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.75}
+
+  /* 上の帯 */
+  .band{background:linear-gradient(180deg,var(--night) 0%,var(--night-2) 100%);color:var(--on-night);padding:28px 0 30px;position:relative;overflow:hidden}
+  .band::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--dawn),var(--gold))}
+  .inner{max-width:680px;margin:0 auto;padding:0 20px}
+  .kicker{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.18em;color:var(--gold);margin:0}
+  h1{font-family:var(--display);font-weight:900;font-size:30px;line-height:1.3;margin:2px 0 2px;text-wrap:balance}
+  .dates{margin:0;font-size:16px;opacity:.85}
+  .count{margin:22px 0 0;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+  .count .lbl{font-family:var(--display);font-weight:700;font-size:18px;line-height:1.4;padding-bottom:14px}
+  .count .n{font-family:var(--display);font-weight:900;font-size:clamp(84px,27vw,128px);line-height:.9;color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+  .count .unit{font-family:var(--display);font-weight:700;font-size:26px;padding-bottom:10px}
+  .small{margin:16px 0 0;display:inline-flex;align-items:center;gap:10px;font-size:15px;
+    border:1px solid rgba(227,176,75,.45);border-radius:999px;padding:4px 14px 4px 6px}
+  .small b{font-family:var(--display);background:var(--gold);color:var(--night);border-radius:999px;padding:0 10px;font-size:15px}
+
+  main.inner{padding-top:26px;padding-bottom:64px}
+  section{margin:0 0 34px}
+  h2{font-family:var(--display);font-weight:900;font-size:21px;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+  h2::before{content:"";width:6px;height:22px;border-radius:3px;background:var(--dawn)}
+  .tag{font-family:var(--body);font-size:13px;font-weight:700;color:var(--dawn);border:1px solid var(--dawn);border-radius:999px;padding:0 9px;line-height:1.7}
+
+  /* 日にちの帯（24日） */
+  .strip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .strip .wd{font-size:12px;color:var(--sub);text-align:center}
+  .strip .d{aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:var(--display);font-weight:700;font-size:16px;line-height:1.1;border-bottom:3px solid var(--rule);font-variant-numeric:tabular-nums}
+  .strip .d small{font-size:9px;font-weight:700}
+  .strip .d.off{border:none}
+  .strip .d.past{color:var(--sub);border-bottom-color:var(--gold)}
+  .strip .d.today{background:var(--night);color:var(--gold);border-radius:8px 8px 0 0;border-bottom-color:var(--gold)}
+  .strip .d.mem{color:var(--dawn);border-bottom-color:var(--dawn);background:var(--dawn-soft);border-radius:8px 8px 0 0}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--sub);margin-top:10px}
+  .legend i{display:inline-block;width:14px;height:3px;margin-right:6px;vertical-align:4px}
+
+  /* 今からできること */
+  .prep{list-style:none;margin:0;padding:0;counter-reset:p}
+  .prep li{counter-increment:p;display:grid;grid-template-columns:44px 1fr;gap:4px 12px;padding:14px 0;border-top:1px solid var(--rule)}
+  .prep li:last-child{border-bottom:1px solid var(--rule)}
+  .prep li::before{content:counter(p);font-family:var(--display);font-weight:900;font-size:30px;line-height:1;color:var(--gold);grid-row:span 2}
+  .prep b{font-family:var(--display);font-size:18px;display:block;line-height:1.5}
+  .prep span{font-size:16px;color:var(--sub);line-height:1.6}
+
+  /* 数字 */
+  .nums{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .nums div{padding:14px 8px;text-align:center}
+  .nums div+div{border-left:1px solid var(--rule)}
+  .nums .v{font-family:var(--display);font-weight:900;font-size:40px;line-height:1.1;color:var(--night);font-variant-numeric:tabular-nums}
+  .nums .v small{font-size:17px;margin-left:2px}
+  .nums .l{font-size:14px;color:var(--sub)}
+  .note{font-size:13px;color:var(--sub);text-align:right;margin:6px 0 0}
+
+  .word{background:var(--night);color:var(--on-night);border-radius:4px 18px 18px 18px;padding:16px 20px}
+  .word .k{font-size:13px;color:var(--gold);font-weight:700;letter-spacing:.1em}
+  .word p{margin:2px 0 0;font-family:var(--display);font-weight:700;font-size:19px;line-height:1.65}
+
+  .soon{border-left:3px solid var(--gold);padding:2px 0 2px 16px}
+  .soon p{margin:0 0 6px}
+  .soon p:last-child{margin:0}
+
+  /* 開け閉めする項目 */
+  details{border-top:1px solid var(--rule)}
+  details:last-of-type{border-bottom:1px solid var(--rule)}
+  summary{list-style:none;cursor:pointer;padding:16px 40px 16px 0;font-family:var(--display);font-weight:700;font-size:19px;position:relative}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"";position:absolute;right:6px;top:24px;width:10px;height:10px;border-right:2.5px solid var(--dawn);border-bottom:2.5px solid var(--dawn);transform:rotate(45deg);transition:transform .2s}
+  details[open] summary::after{transform:rotate(-135deg);top:29px}
+  summary small{display:block;font-family:var(--body);font-weight:400;font-size:14px;color:var(--sub)}
+  summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .body{padding:0 0 18px}
+  .body ol,.body ul{margin:0;padding-left:1.3em}
+  .body li{margin:8px 0}
+  .body li b{color:var(--night)}
+  .body h3{font-family:var(--display);font-size:17px;margin:18px 0 4px}
+  .body p{margin:6px 0}
+  .say{background:var(--gold-soft);border-radius:4px 14px 14px 14px;padding:12px 16px;margin:10px 0}
+  .say .when{display:block;font-size:13px;color:var(--sub)}
+  .warn{background:var(--dawn-soft);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:16px}
+  .warn b{color:var(--dawn)}
+  .marks{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin:10px 0}
+  .mark{display:flex;align-items:center;gap:10px;border:1px solid var(--rule);border-radius:10px;padding:8px 10px;background:#fff}
+  .mark .m{font-family:var(--display);font-weight:900;font-size:24px;color:var(--night);min-width:44px;text-align:center}
+  .mark .t{font-size:15px;line-height:1.4}
+  .mark .t small{display:block;font-size:12px;color:var(--sub)}
+  @media (prefers-reduced-motion:reduce){summary::after{transition:none}}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="inner">
+    <p class="kicker">MEMORIAL 2027</p>
+    <h1>記念式キャンペーン</h1>
+    <p class="dates">2月27日（土）〜3月22日（月）</p>
+    <div class="count" aria-live="polite">
+      <span class="lbl" id="cLbl">キャンペーン<br>開始まで</span>
+      <span class="n" id="cN">–</span>
+      <span class="unit" id="cUnit">日</span>
+    </div>
+    <div class="small" id="sWrap"><b id="sLbl">記念式</b><span id="sTxt">3月22日（月）まで あと –日</span></div>
+  </div>
+</header>
+
+<main class="inner">
+  <section id="prep">
+    <h2>今からできること</h2>
+    <ol class="prep">
+      <li><b>体調を整える</b><span>冬は体調を崩しやすい時期。キャンペーンはたくさん歩きます。</span></li>
+      <li><b>用事は今のうちに</b><span>キャンペーン中に奉仕へ集中できるよう、片付けられる用事を先に済ませておく。</span></li>
+      <li><b>今の研究や再訪問を大切に</b><span>キャンペーンが始まっても続けられるよう、今の人たちとの関係を育てておく。</span></li>
+      <li><b>自分の目標を考えておく</b><span>ノルマはありません。1日に渡したい枚数など、自分にできる目標を。</span></li>
+      <li><b>区域カードへの書き方を試しておく</b><span>iPhoneの人は、PDFに書き込む手順を一度やってみると当日あわてません（下の「記録のしかた」）。</span></li>
+      <li><b>今から祈り始める</b><span>区域の人たちのこと、自分の目標のことを、キャンペーンの前から祈れます。</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>キャンペーンの24日間</h2>
+    <div class="strip" id="cal"></div>
+    <div class="legend"><span><i style="background:var(--gold)"></i>終わった日</span><span><i style="background:var(--night)"></i>今日</span><span><i style="background:var(--dawn)"></i>記念式</span></div>
+  </section>
+
+  <section id="numsSec">
+    <h2>みんなの歩み</h2>
+    <div class="nums">
+      <div><span class="v">–<small>枚</small></span><br><span class="l">会衆に残っている招待状</span></div>
+      <div><span class="v">0<small>区域</small></span><br><span class="l">使用開始した区域</span></div>
+    </div>
+    <p class="note">数はキャンペーン中に更新します</p>
+  </section>
+
+  <section>
+    <div class="word"><span class="k">今日のひと言</span><p id="tip">祈りがいちばん大切。出かけられない日も、祈りでキャンペーンを支えられます</p></div>
+  </section>
+
+  <section>
+    <h2>毎日の集まり<span class="tag">準備中</span></h2>
+    <div class="soon">
+      <p>キャンペーン中は<b>毎日</b>、野外奉仕の集まりがあります。</p>
+      <p>時間と場所は、決まりしだいここに出ます。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>空いている区域の地図<span class="tag">準備中</span></h2>
+    <div class="soon">
+      <p>地図を開くと、空いている区域と使っている区域が色で分かるようになります。</p>
+      <p>区域と招待状は多めに受け取ってください。足りなくなると、時間があっても配布が止まってしまいます。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>読みたい項目を開く</h2>
+    <details open>
+      <summary>これだけは覚えておく</summary>
+      <div class="body"><ol>
+        <li><b>祈りがいちばん大切。</b>外に出られない人も、祈りで参加できます</li>
+        <li><b>投函せず、会って渡す。</b>留守の家は記録して、別の時間にもう一度訪ねる</li>
+        <li><b>ひと言で短く渡す。</b>内容は招待状に語らせる</li>
+        <li><b>少人数で、安全に。</b>晩の奉仕は、姉妹は必ず2人以上で</li>
+        <li><b>渡した家は全部再訪問する。</b>記念式のあとが本番です</li>
+      </ol></div>
+    </details>
+
+    <details>
+      <summary>渡すときのひと言<small>内容は招待状に語らせる</small></summary>
+      <div class="body">
+        <div class="say"><span class="when">玄関で</span>「こんにちは。3月22日に行われるイベントのご案内を差し上げています。後ほどご覧ください」</div>
+        <ul>
+          <li>関心のない人に長く話すと断られます。</li>
+          <li>続けて断られたら、渡し方を見直してみてください。</li>
+          <li>相手が関心を示したら、そこから少しずつ話を足します。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>投函してもよい場合<small>基本は会って渡す</small></summary>
+      <div class="body">
+        <ul>
+          <li>晩の奉仕で、<b>灯りがついているのに応答がなく</b>、明らかに居留守と分かる家</li>
+          <li>奉仕者の家から離れていて、<b>家が密集していない区域</b>の留守宅</li>
+          <li><b>再訪問先や知人</b>の家</li>
+        </ul>
+        <div class="warn"><b>投函した家も、記念式のあとに再訪問します。</b>投函するかどうかは奉仕者が判断します。チラシがたまっているポストには入れなくてかまいません。</div>
+      </div>
+    </details>
+
+    <details id="rec">
+      <summary>区域カードへの記録のしかた<small>記号の例。決まりではありません</small></summary>
+      <div class="body">
+        <p>記録のしかたは自由です。下は記号の一例です。自分の使いやすい方法で記録してください。</p>
+        <div class="marks">
+          <div class="mark"><span class="m">／</span><span class="t">会って渡した</span></div>
+          <div class="mark"><span class="m">×</span><span class="t">断られた</span></div>
+          <div class="mark"><span class="m">△</span><span class="t">留守<small>もう一度訪ねる</small></span></div>
+          <div class="mark"><span class="m">〒</span><span class="t">投函した</span></div>
+          <div class="mark"><span class="m" style="font-size:19px">50M</span><span class="t">受け取った人<small>50代の男性。女性はF</small></span></div>
+        </div>
+        <h3>iPhoneで書く</h3>
+        <ol>
+          <li>LINEで届いた区域カード（PDF）を開く</li>
+          <li>共有のボタンから「ファイルに保存」を選ぶ</li>
+          <li>「ファイル」のアプリでそのカードを開く</li>
+          <li>ペンのマークを押して、指で書く</li>
+          <li>「完了」を押すと、書いたものが残る</li>
+        </ol>
+        <h3>紙に書く</h3>
+        <p>スマホで書くのが難しい人は、区域カードを印刷して鉛筆で書いてください。印刷が必要な人は奉仕監督に伝えてください。</p>
+        <div class="warn"><b>名前や住所は、自分の区域カードだけに。</b>みんなで見るリストには書きません。</div>
+      </div>
+    </details>
+
+    <details id="after">
+      <summary>記念式のあとの再訪問<small>ここからが本番</small></summary>
+      <div class="body">
+        <div class="say"><span class="when">再訪問で</span>「先日、イベントのご案内を差し上げた者です。お越しになれなかった皆さんに、このリーフレットを差し上げています。後ほどご覧ください」</div>
+        <ul>
+          <li>最初の訪問と同じように、<b>ごく短く</b>。</li>
+          <li><b>十分な間をあけて</b>訪ねる。</li>
+          <li>応答のない家に、しつこく訪問しない。</li>
+          <li>断られた家は記録しておく。聞きたくないという気持ちが分かっただけでも成功です。</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+</main>
+
+<script>
+(function(){
+  var DAY=86400000;
+  var START=Date.UTC(2027,1,27), MEM=Date.UTC(2027,2,22);
+  var p=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).split('-');
+  var TODAY=Date.UTC(+p[0],+p[1]-1,+p[2]);
+  var toMem=Math.round((MEM-TODAY)/DAY), toStart=Math.round((START-TODAY)/DAY);
+  var $=function(id){return document.getElementById(id)};
+
+  if(toStart>0){
+    // キャンペーン前：大きく開始までの日数、小さく記念式までの日数
+    $('cN').textContent=toStart;
+    $('sTxt').textContent='3月22日（月）まで あと'+toMem+'日';
+  }else if(toMem>0){
+    $('cLbl').innerHTML='記念式まで<br>あと';
+    $('cN').textContent=toMem;
+    $('sLbl').textContent='キャンペーン';
+    $('sTxt').textContent=(1-toStart)+'日目（全24日）';
+    $('prep').hidden=true;
+  }else if(toMem===0){
+    $('cLbl').innerHTML='記念式は';
+    $('cN').textContent='今日';
+    $('cUnit').textContent='';
+    $('sLbl').textContent='キャンペーン';
+    $('sTxt').textContent='24日目。最後の1枚まで';
+    $('prep').hidden=true;
+  }else{
+    $('cLbl').innerHTML='記念式から';
+    $('cN').textContent=-toMem;
+    $('cUnit').textContent='日目';
+    $('sLbl').textContent='再訪問';
+    $('sTxt').textContent='渡した家を訪ねる期間です';
+    $('prep').hidden=true;
+    $('after').open=true;
+  }
+
+  var html='';
+  ['月','火','水','木','金','土','日'].forEach(function(w){html+='<div class="wd">'+w+'</div>'});
+  var first=Date.UTC(2027,1,22);
+  for(var i=0;i<35;i++){
+    var t=first+i*DAY, d=new Date(t);
+    if(t<START||t>MEM){html+='<div class="d off"></div>';continue}
+    var cls='d', day=d.getUTCDate(), label=(t===START||day===1)?(d.getUTCMonth()+1)+'/'+day:day;
+    if(t<TODAY) cls+=' past';
+    if(t===TODAY) cls+=' today';
+    if(t===MEM) cls+=' mem';
+    html+='<div class="'+cls+'">'+label+(t===MEM?'<small>記念式</small>':'')+'</div>';
+  }
+  $('cal').innerHTML=html;
+
+  var tips=[
+    '祈りがいちばん大切。出かけられない日も、祈りでキャンペーンを支えられます',
+    '今日の目標を決めて出かける。「今日は○枚渡してから帰ろう」',
+    '区域と招待状は多めに受け取る。足りないと配布が止まります',
+    '自分なりの記号を決めておくと、記録しても奉仕のスピードが落ちません',
+    '少人数に分かれて動くと、たくさんの人に会えます',
+    'ひと言で渡す。内容は招待状に語らせればよい',
+    '留守の家には、会える時間にもう一度訪ねる',
+    '道で会う人にも、買い物先のレジでも渡せます',
+    '渡した家は全部再訪問。リーフレットを渡すだけでよい',
+    '健康と安全に注意。足や腰が痛い人は決して無理をしない'
+  ];
+  $('tip').textContent=tips[((TODAY/DAY)%tips.length+tips.length)%tips.length];
+})();
+</script>
+</body>
+</html>
